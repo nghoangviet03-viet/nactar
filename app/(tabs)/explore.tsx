@@ -1,112 +1,132 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { useRouter } from "expo-router";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function Explore() {
+  const router = useRouter();
 
-export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* TITLE */}
+      <Text style={styles.title}>Find Products</Text>
+
+      {/* SEARCH */}
+      <View style={styles.searchBox}>
+        <TextInput placeholder="Search Store" />
+      </View>
+
+      {/* GRID */}
+      <View style={styles.grid}>
+        <View style={[styles.card, { backgroundColor: "#E8F5E9", borderColor: "#53B175" }]}>
+          <Image source={require("../../assets/fruits.png")} style={styles.image} />
+          <Text style={styles.text}>Fresh Fruits & Vegetable</Text>
+        </View>
+
+        <View style={[styles.card, { backgroundColor: "#FFF3E0", borderColor: "#F8A44C" }]}>
+          <Image source={require("../../assets/oil.png")} style={styles.image} />
+          <Text style={styles.text}>Cooking Oil & Ghee</Text>
+        </View>
+
+        <View style={[styles.card, { backgroundColor: "#FCE4EC", borderColor: "#F06292" }]}>
+          <Image source={require("../../assets/meat.png")} style={styles.image} />
+          <Text style={styles.text}>Meat & Fish</Text>
+        </View>
+
+        <View style={[styles.card, { backgroundColor: "#F3E5F5", borderColor: "#BA68C8" }]}>
+          <Image source={require("../../assets/bakery.png")} style={styles.image} />
+          <Text style={styles.text}>Bakery & Snacks</Text>
+        </View>
+
+        <View style={[styles.card, { backgroundColor: "#FFFDE7", borderColor: "#FBC02D" }]}>
+          <Image source={require("../../assets/dairy.png")} style={styles.image} />
+          <Text style={styles.text}>Dairy & Eggs</Text>
+        </View>
+
+        {/* 🔥 BEVERAGES - CÓ BUTTON */}
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: "#E3F2FD", borderColor: "#64B5F6" }]}
+          onPress={() => router.push("/Beverages")}
+        >
+          <Image
+            source={require("../../assets/beverages.png")}
+            style={styles.image}
+          />
+          <Text style={styles.text}>Beverages</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 15,
+  },
+
+  searchBox: {
+    backgroundColor: "#f2f2f2",
+    padding: 12,
+    borderRadius: 15,
+    marginBottom: 20,
+  },
+
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+
+  card: {
+    width: "48%",
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 15,
+    alignItems: "center",
+    borderWidth: 1.5,
+  },
+
+  image: {
+    width: 90,
+    height: 90,
+    resizeMode: "contain",
+    marginBottom: 10,
+  },
+
+  text: {
+    textAlign: "center",
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+
+  /* 🔥 BUTTON */
+  button: {
+    backgroundColor: "#53B175",
+    paddingHorizontal: 15,
+    paddingVertical: 6,
+    borderRadius: 10,
+    marginTop: 5,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "500",
   },
 });

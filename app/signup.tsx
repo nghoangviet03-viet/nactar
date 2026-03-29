@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { router } from "expo-router";
 
 export default function SignUpScreen() {
   const [showPassword, setShowPassword] = useState(false);
@@ -70,9 +71,12 @@ export default function SignUpScreen() {
       </Text>
 
       {/* BUTTON */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Sing Up</Text>
-      </TouchableOpacity>
+      <TouchableOpacity
+  style={styles.button}
+  onPress={() => router.replace("/(tabs)")}
+>
+  <Text style={styles.buttonText}>Sign Up</Text>
+</TouchableOpacity>
     </View>
   );
 }

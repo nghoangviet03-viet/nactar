@@ -1,98 +1,329 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const { width } = Dimensions.get("window");
+
+const SLIDER = [
+  require("../../assets/banner.png"),
+  require("../../assets/banner.png"),
+  require("../../assets/banner.png"),
+];
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState(0);
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const onScroll = (event) => {
+    const slide = Math.round(
+      event.nativeEvent.contentOffset.x / (width - 40)
+    );
+    setActiveIndex(slide);
+  };
+
+  return (
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Image
+          source={require("../../assets/carrot.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.location}>Dhaka, Banassre</Text>
+      </View>
+
+      {/* SEARCH */}
+      <View style={styles.searchBox}>
+        <TextInput placeholder="Search Store" />
+      </View>
+
+      {/* 🔥 SLIDER */}
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
+        {SLIDER.map((img, index) => (
+          <Image key={index} source={img} style={styles.banner} />
+        ))}
+      </ScrollView>
+
+      {/* DOT */}
+      <View style={styles.dots}>
+        {SLIDER.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              activeIndex === index && styles.activeDot,
+            ]}
+          />
+        ))}
+      </View>
+
+      {/* EXCLUSIVE */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Exclusive Offer</Text>
+        <Text style={styles.seeAll}>See all</Text>
+      </View>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {/* BANANA */}
+        <View style={styles.card}>
+          <Image
+            source={require("../../assets/banana.png")}
+            style={styles.cardImg}
+          />
+          <Text style={styles.cardTitle}>Organic Bananas</Text>
+          <Text style={styles.cardSub}>1kg, Price</Text>
+
+          <View style={styles.cardBottom}>
+            <Text style={styles.price}>$4.99</Text>
+            <TouchableOpacity style={styles.addBtn}>
+              <Text style={styles.addText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* APPLE */}
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => router.push("/product detail")}
+        >
+          <Image
+            source={require("../../assets/apple.png")}
+            style={styles.cardImg}
+          />
+          <Text style={styles.cardTitle}>Red Apple</Text>
+          <Text style={styles.cardSub}>1kg, Price</Text>
+
+          <View style={styles.cardBottom}>
+            <Text style={styles.price}>$4.99</Text>
+            <TouchableOpacity style={styles.addBtn}>
+              <Text style={styles.addText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* GROCERIES */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Groceries</Text>
+        <Text style={styles.seeAll}>See all</Text>
+      </View>
+
+      <View style={styles.groceryRow}>
+        <View style={styles.groceryCard}>
+          <Image
+            source={require("../../assets/Pulses.png")}
+            style={styles.groceryImg}
+          />
+          <Text>Pulses</Text>
+        </View>
+
+        <View style={styles.groceryCard}>
+          <Image
+            source={require("../../assets/Rice.png")}
+            style={styles.groceryImg}
+          />
+          <Text>Rice</Text>
+        </View>
+      </View>
+
+      {/* GRID */}
+      <View style={styles.grid}>
+        <View style={styles.card}>
+          <Image
+            source={require("../../assets/beef-bone.png")}
+            style={styles.cardImg}
+          />
+          <Text style={styles.cardTitle}>Beef Bone</Text>
+          <Text style={styles.cardSub}>1kg, Price</Text>
+
+          <View style={styles.cardBottom}>
+            <Text style={styles.price}>$4.99</Text>
+            <TouchableOpacity style={styles.addBtn}>
+              <Text style={styles.addText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Image
+            source={require("../../assets/chicken.png")}
+            style={styles.cardImg}
+          />
+          <Text style={styles.cardTitle}>Broiler Chicken</Text>
+          <Text style={styles.cardSub}>1kg, Price</Text>
+
+          <View style={styles.cardBottom}>
+            <Text style={styles.price}>$4.99</Text>
+            <TouchableOpacity style={styles.addBtn}>
+              <Text style={styles.addText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+
+  header: {
+    alignItems: "center",
+    marginTop: 10,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+
+  logo: {
+    width: 30,
+    height: 30,
+  },
+
+  location: {
+    marginTop: 5,
+    fontWeight: "500",
+  },
+
+  searchBox: {
+    backgroundColor: "#f2f2f2",
+    padding: 12,
+    borderRadius: 12,
+    marginVertical: 15,
+  },
+
+  banner: {
+    width: width - 40,
+    height: 130,
+    borderRadius: 15,
+    marginRight: 10,
+  },
+
+  dots: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#ccc",
+    marginHorizontal: 4,
+  },
+
+  activeDot: {
+    backgroundColor: "#53B175",
+    width: 12,
+  },
+
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  seeAll: {
+    color: "#53B175",
+  },
+
+  card: {
+    width: 160,
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 12,
+    marginRight: 15,
+    borderWidth: 1,
+    borderColor: "#eee",
+  },
+
+  cardImg: {
+    width: "100%",
+    height: 90,
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+
+  cardTitle: {
+    fontWeight: "600",
+    marginTop: 10,
+  },
+
+  cardSub: {
+    color: "#999",
+    fontSize: 12,
+  },
+
+  cardBottom: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  price: {
+    fontWeight: "bold",
+  },
+
+  addBtn: {
+    backgroundColor: "#53B175",
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  addText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+
+  groceryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+
+  groceryCard: {
+    width: "48%",
+    backgroundColor: "#f5e6d8",
+    padding: 15,
+    borderRadius: 15,
+    alignItems: "center",
+  },
+
+  groceryImg: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    marginBottom: 10,
+  },
+
+  grid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
