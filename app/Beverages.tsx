@@ -13,35 +13,35 @@ const DATA = [
     name: "Sprite Can",
     size: "325ml",
     price: "$1.50",
-    image: require("../assets/sprite.png"), // ✅ FIX
+    image: require("../assets/sprite.png"), // 
   },
   {
     id: "3",
     name: "Apple Juice",
     size: "2L",
     price: "$15.99",
-    image: require("../assets/apple.png"), // ✅ FIX
+    image: require("../assets/apple.png"), // 
   },
   {
     id: "4",
     name: "Orange Juice",
     size: "2L",
     price: "$15.99",
-    image: require("../assets/orange.png"), // ✅ FIX
+    image: require("../assets/orange.png"), // 
   },
   {
     id: "5",
     name: "Coca Cola Can",
     size: "325ml",
     price: "$4.99",
-    image: require("../assets/coca.png"), // ✅ FIX
+    image: require("../assets/coca.png"), // 
   },
   {
     id: "6",
     name: "Pepsi Can",
     size: "330ml",
     price: "$4.99",
-    image: require("../assets/pepsi.png"), // ✅ FIX
+    image: require("../assets/pepsi.png"), //
   },
 ];
 

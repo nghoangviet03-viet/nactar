@@ -42,9 +42,12 @@ export default function HomeScreen() {
       </View>
 
       {/* SEARCH */}
-      <View style={styles.searchBox}>
-        <TextInput placeholder="Search Store" />
-      </View>
+       <TouchableOpacity
+        style={styles.searchBox}
+        onPress={() => router.push("/search")}
+      >
+        <Text style={{ color: "#999" }}>Search Store</Text>
+      </TouchableOpacity>
 
       {/* 🔥 SLIDER */}
       <ScrollView
