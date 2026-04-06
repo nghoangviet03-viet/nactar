@@ -14,6 +14,7 @@ homescreen![alt text](pic9.jpg)
 product detail![alt text](pic10.jpg)
 explore![alt text](pic11.jpg)
 beverages![alt text](pic12.jpg)
+update:P4-06/04/2026
 search![alt text](pic13.jpg)
 filter![alt text](pic14.jpg)
 mycart![alt text](pic15.jpg)
