@@ -13,3 +13,7 @@ export const addToCart = (product) => {
 export const getCart = () => {
   return cart;
 };
+
+export const clearCart = () => {
+  cart.length = 0;
+};

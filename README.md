@@ -19,3 +19,8 @@ search![alt text](pic13.jpg)
 filter![alt text](pic14.jpg)
 mycart![alt text](pic15.jpg)
 favourite![alt text](pic16.jpg)
+<b>update:P4-10/04/2026<b>
+checkout![alt text](pic17.jpg)
+order_accepted![alt text](pic18.jpg)
+error![alt text](pic19.jpg)
+account![alt text](pic20.jpg)
