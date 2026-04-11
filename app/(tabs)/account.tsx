@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -9,6 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { authStore } from '../authStore';
+import { clearCart } from '../cartStore';
 
 const menuItems = [
   { icon: 'bag-outline', label: 'Orders' },
@@ -22,6 +26,61 @@ const menuItems = [
 ];
 
 export default function AccountScreen() {
+  const router = useRouter();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const user = await authStore.getUser();
+        setUserData(user);
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  const handleMenuPress = (label) => {
+    if (label === 'Orders') {
+      router.push('/orders');
+    }
+    // Add other menu handlers as needed
+  };
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Đăng xuất",
+      "Bạn có chắc chắn muốn đăng xuất?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel"
+        },
+        {
+          text: "Đăng xuất",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              // Xóa toàn bộ dữ liệu authentication
+              await authStore.logout();
+
+              // Xóa cart data
+              clearCart();
+
+              // Navigate về signin screen
+              router.replace('/signin');
+            } catch (error) {
+              console.error("Error during logout:", error);
+              Alert.alert("Lỗi", "Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại.");
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
@@ -37,14 +96,20 @@ export default function AccountScreen() {
 
           <View style={styles.profileInfo}>
             <View style={styles.nameRow}>
-              <Text style={styles.name}>Afsar Hossen</Text>
+              <Text style={styles.name}>{userData?.name || "User"}</Text>
               <TouchableOpacity>
                 <Ionicons name="pencil" size={14} color="#53B175" />
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.email}>Imshuvo97@gmail.com</Text>
+            <Text style={styles.email}>{userData?.email || "user@example.com"}</Text>
           </View>
+        </View>
+
+        <View style={styles.studentInfo}>
+          <Text style={styles.studentTitle}>Sinh viên thực hiện</Text>
+          <Text style={styles.studentName}>Nguyễn Hoàng Việt</Text>
+          <Text style={styles.studentId}>MSSV: 23810310438</Text>
         </View>
 
         <View style={styles.divider} />
@@ -52,7 +117,10 @@ export default function AccountScreen() {
         {/* MENU */}
         {menuItems.map((item, index) => (
           <View key={index}>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuPress(item.label)}
+            >
               <View style={styles.menuLeft}>
                 <Ionicons name={item.icon as any} size={24} color="#333" />
                 <Text style={styles.menuLabel}>{item.label}</Text>
@@ -65,8 +133,10 @@ export default function AccountScreen() {
           </View>
         ))}
 
+        <View style={styles.divider} />
+
         {/* LOGOUT */}
-        <TouchableOpacity style={styles.logoutBtn}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={20} color="#53B175" />
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
@@ -168,5 +238,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#53B175',
+  },
+
+  studentInfo: {
+    marginHorizontal: 20,
+    marginTop: 16,
+    padding: 14,
+    backgroundColor: '#F8F8F8',
+    borderRadius: 12,
+  },
+
+  studentTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 8,
+  },
+
+  studentName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+
+  studentId: {
+    fontSize: 14,
+    color: '#666',
   },
 });

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function Onboarding() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.replace("/signin")}
+          onPress={() => router.replace("/signup")}
         >
           <Text style={styles.btnText}>Get Started</Text>
         </TouchableOpacity>

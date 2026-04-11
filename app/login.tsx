@@ -1,17 +1,67 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
+  Image,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Image,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { useRouter } from "expo-router";
+import { authStore } from "./authStore";
+
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const handleLogin = async () => {
+    // Validation
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Lỗi", "Vui lòng nhập email và mật khẩu");
+      return;
+    }
+
+    try {
+      // Lấy user data đã lưu
+      const savedUser = await authStore.getUser();
+
+      if (!savedUser) {
+        Alert.alert("Lỗi", "Tài khoản chưa được đăng ký. Vui lòng đăng ký trước.");
+        return;
+      }
+
+      const savedPassword = await authStore.getPassword();
+
+      // Check email và password (đơn giản - trong thực tế nên verify với server)
+      if (savedUser.email === email.trim().toLowerCase() && password === savedPassword) {
+        // Tạo token mới cho session này
+        const token = "auth_token_" + Date.now();
+
+        // Lưu token
+        await authStore.saveToken(token);
+
+        Alert.alert(
+          "Thành công",
+          "Đăng nhập thành công!",
+          [
+            {
+              text: "OK",
+              onPress: () => router.replace("/(tabs)"),
+            },
+          ]
+        );
+      } else {
+        Alert.alert("Lỗi", "Email hoặc mật khẩu không đúng");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      Alert.alert("Lỗi", "Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.");
+    }
+  };
 
   return (
  
@@ -24,7 +74,7 @@ export default function LoginScreen() {
       />
 
       {/* TITLE */}
-      <Text style={styles.title}>Loging</Text>
+      <Text style={styles.title}>Login</Text>
       <Text style={styles.subtitle}>
         Enter your emails and password
       </Text>
@@ -33,23 +83,32 @@ export default function LoginScreen() {
       <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
-        defaultValue="nghoangviet03@gmail.com"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Enter your email"
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
 
-    <View style={styles.passwordRow}>
-  <TextInput
-    style={{ flex: 1 }}
-    secureTextEntry={!showPassword}
-    defaultValue="tưởng tày nhưng không"  />
+      {/* PASSWORD */}
+      <Text style={styles.label}>Password</Text>
+      <View style={styles.passwordRow}>
+        <TextInput
+          style={{ flex: 1 }}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter your password"
+          secureTextEntry={!showPassword}
+        />
 
-  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-    <Ionicons
-      name={showPassword ? "eye-outline" : "eye-off-outline"}
-      size={22}
-      color="#888"
-    />
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Ionicons
+            name={showPassword ? "eye-outline" : "eye-off-outline"}
+            size={22}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
 
       {/* FORGOT */}
       <TouchableOpacity>
@@ -57,18 +116,18 @@ export default function LoginScreen() {
       </TouchableOpacity>
 
       {/* BUTTON */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 
       {/* SIGNUP */}
       <Text style={styles.signup}>
-  Don’t have an account?
-  <Text> </Text>
-  <Text style={styles.signupLink} onPress={() => router.push("/signup")}>
-    Signup
-  </Text>
-</Text>
+        Don’t have an account?
+        <Text> </Text>
+        <Text style={styles.signupLink} onPress={() => router.push("/signup")}>
+          Signup
+        </Text>
+      </Text>
     </View>
   );
 }

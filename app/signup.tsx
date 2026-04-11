@@ -1,17 +1,66 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
+  Image,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Image,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { router } from "expo-router";
+import { authStore } from "./authStore";
 
 export default function SignUpScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = async () => {
+    // Validation
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      Alert.alert("Lỗi", "Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự");
+      return;
+    }
+
+    try {
+      // Tạo user data
+      const userData = {
+        id: "user_" + Date.now(),
+        name: username.trim(),
+        email: email.trim().toLowerCase(),
+        avatar: "../../assets/avatar.png",
+        createdAt: new Date().toISOString(),
+      };
+
+      // Tạo token
+      const token = "auth_token_" + Date.now();
+
+      // Lưu user data, mật khẩu và token
+      await authStore.saveUser(userData, password, token);
+
+      Alert.alert(
+        "Thành công",
+        "Đăng ký thành công!",
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)"),
+          },
+        ]
+      );
+    } catch (error) {
+      console.error("Error during signup:", error);
+      Alert.alert("Lỗi", "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -32,7 +81,9 @@ export default function SignUpScreen() {
       <Text style={styles.label}>Username</Text>
       <TextInput
         style={styles.input}
-        defaultValue="Afsar Hossen Shuvo"
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Enter your username"
       />
 
       {/* EMAIL */}
@@ -40,7 +91,11 @@ export default function SignUpScreen() {
       <View style={styles.inputRow}>
         <TextInput
           style={{ flex: 1 }}
-          defaultValue="imshuvo97@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <Ionicons name="checkmark" size={22} color="#53B175" />
       </View>
@@ -50,8 +105,10 @@ export default function SignUpScreen() {
       <View style={styles.inputRow}>
         <TextInput
           style={{ flex: 1 }}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter your password"
           secureTextEntry={!showPassword}
-          defaultValue="12345678"
         />
 
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -72,11 +129,19 @@ export default function SignUpScreen() {
 
       {/* BUTTON */}
       <TouchableOpacity
-  style={styles.button}
-  onPress={() => router.replace("/(tabs)")}
->
-  <Text style={styles.buttonText}>Sign Up</Text>
-</TouchableOpacity>
+        style={styles.button}
+        onPress={handleSignUp}
+      >
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+
+      {/* LOGIN LINK */}
+      <Text style={styles.login}>
+        Already have an account?{" "}
+        <Text style={styles.loginLink} onPress={() => router.push("/login")}>
+          Login
+        </Text>
+      </Text>
     </View>
   );
 }
@@ -150,5 +215,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 16,
+  },
+
+  login: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "#777",
+  },
+
+  loginLink: {
+    color: "#53B175",
+    fontWeight: "600",
   },
 });

@@ -1,18 +1,50 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { authStore } from "./authStore";
 
 export default function VerificationScreen() {
   const router = useRouter();
   const [code, setCode] = useState("");
+
+  const handleVerification = async () => {
+    // Giả lập verification thành công (code = "1234")
+    if (code === "1234") {
+      try {
+        // Tạo user data mẫu
+        const userData = {
+          id: "user_123",
+          name: "Afsar Hossen",
+          email: "Imshuvo97@gmail.com",
+          phone: "+84",
+          avatar: "../../assets/avatar.png"
+        };
+
+        // Tạo token mẫu
+        const token = "auth_token_" + Date.now();
+
+        // Lưu user data và token
+        await authStore.saveUser(userData, token);
+
+        // Navigate đến select location
+        router.replace("/select location");
+      } catch (error) {
+        console.error("Error saving user data:", error);
+        // Vẫn navigate nếu có lỗi lưu data
+        router.replace("/select location");
+      }
+    } else {
+      alert("Mã xác thực không đúng. Vui lòng thử lại!");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -54,7 +86,7 @@ export default function VerificationScreen() {
         {/* BUTTON */}
         <TouchableOpacity
           style={styles.nextBtn}
-          onPress={() => router.replace("/select location")}
+          onPress={handleVerification}
         >
           <Text style={styles.nextText}>›</Text>
         </TouchableOpacity>

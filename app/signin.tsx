@@ -1,12 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
 import { useRouter } from "expo-router";
+import {
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 
 export default function SignIn() {
   const router = useRouter();
@@ -61,6 +60,17 @@ export default function SignIn() {
           style={styles.fullImage}
         />
       </TouchableOpacity>
+
+      {/* ALTERNATIVE LOGIN */}
+      <View style={styles.alternativeContainer}>
+        <Text style={styles.alternativeText}>Or use email login</Text>
+        <TouchableOpacity
+          style={styles.altBtn}
+          onPress={() => router.push("/login")}
+        >
+          <Text style={styles.altBtnText}>Login with Email</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -141,5 +151,30 @@ content: {
     width: "100%",
     height: 60,
     resizeMode: "cover", // đổi thành "contain" nếu bị cắt
+  },
+
+  /* ALTERNATIVE LOGIN */
+  alternativeContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+
+  alternativeText: {
+    color: "#999",
+    fontSize: 14,
+    marginBottom: 15,
+  },
+
+  altBtn: {
+    backgroundColor: "#53B175",
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 25,
+  },
+
+  altBtnText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

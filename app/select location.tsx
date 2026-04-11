@@ -1,11 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from "react-native";
 import { useRouter } from "expo-router";
+import {
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 export default function SelectLocationScreen() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function SelectLocationScreen() {
       </View>
 
       {/* BUTTON */}
-      <TouchableOpacity style={styles.button} onPress={() => router.replace("/login")}>
+      <TouchableOpacity style={styles.button} onPress={() => router.replace("/(tabs)")}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>

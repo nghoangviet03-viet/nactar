@@ -1,16 +1,15 @@
 import {
-  View,
-  Text,
   FlatList,
-  StyleSheet,
   Image,
-  TouchableOpacity
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 
-import { useState, useCallback } from "react";
-import { useFocusEffect } from "expo-router";
-import { getCart } from "../cartStore";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { getCart, removeFromCart } from "../cartStore";
 
 export default function Cart() {
 
@@ -38,6 +37,7 @@ export default function Cart() {
   };
 
   const removeItem = (index: number) => {
+    removeFromCart(index);
     const newCart = [...items];
     newCart.splice(index, 1);
     setItems(newCart);
@@ -190,7 +190,13 @@ export default function Cart() {
   const isSuccess = Math.random() < 0.5; // 50%
 
   if (isSuccess) {
-    router.push("/order_accepted");
+    router.push({
+      pathname: "/order_accepted",
+      params: {
+        cartItems: JSON.stringify(items),
+        total: getTotal().toFixed(2)
+      }
+    });
   } else {
     router.push("/error");
   }
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 20
+    padding: 50
   },
 
   title: {

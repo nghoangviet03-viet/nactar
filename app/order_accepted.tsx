@@ -1,23 +1,39 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    Image,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { clearCart } from "./cartStore";
+import { saveOrder } from "./ordersStore";
 
 export default function OrderAccepted() {
   const [showTrackSheet, setShowTrackSheet] = useState(false);
+  const { cartItems, total } = useLocalSearchParams();
 
   useEffect(() => {
-    // Clear cart when order is accepted successfully
-    clearCart();
-  }, []);
+    // Save order to AsyncStorage, then clear cart when order is accepted successfully
+    const handleOrderSuccess = async () => {
+      try {
+        if (cartItems && total) {
+          const items = JSON.parse(cartItems as string);
+          const totalAmount = parseFloat(total as string);
+          await saveOrder(items, totalAmount);
+        }
+      } catch (error) {
+        console.error('Error saving order:', error);
+      } finally {
+        clearCart();
+      }
+    };
+
+    handleOrderSuccess();
+  }, [cartItems, total]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -42,7 +58,7 @@ export default function OrderAccepted() {
 
             <TouchableOpacity
               style={styles.trackButton}
-              onPress={() => setShowTrackSheet(true)}
+              onPress={() => router.push("/orders")}
             >
               <Text style={styles.trackButtonText}>
                 Track Order
