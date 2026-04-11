@@ -25,8 +25,8 @@ order_accepted![alt text](pic18.jpg)
 error![alt text](pic19.jpg)
 account![alt text](pic20.jpg)
 ##video thao tác
-[▶️ Xem video thao tác bình thường](./vid.mp4)
-[▶️ Xem video kill app](./vid2.mp4)
+[▶️ Xem video thao tác bình thường](./vid.mp4) https://drive.google.com/file/d/1aCML3nm3-udt54kBzunWaQ8vwqRBnsce/view?usp=sharing
+[▶️ Xem video kill app](./vid2.mp4) https://drive.google.com/file/d/1BfvBOUJkLCzH2OPYG4p-a2cB5HkUViDP/view?usp=sharing 
 1. AsyncStorage hoạt động như thế nào?
 AsyncStorage là một kho lưu trữ key-value trên thiết bị di động.
 Dữ liệu được lưu lại vĩnh viễn trong bộ nhớ local của app, nên tắt mở app vẫn còn.
